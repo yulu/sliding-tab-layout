@@ -27,3 +27,21 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
 }
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'sliding-tab-layout'
+
+    publishedGroupId = 'me.littlecheesecake.slidingtablayout'
+    libraryName = 'SlidingTabLayout'
+    artifact = 'library'
+
+    libraryDescription = 'A tab layout UI'
+    libraryVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+    developerId = 'yulu'
+    developerName = 'Yu Lu'
+    developerEmail = 'yulu8798@gmail.com'
+}
+
+apply from: '../tools/bintray.gradle'
