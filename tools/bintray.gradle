@@ -1,0 +1,79 @@
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? bintrayUser : ''
+    key = project.hasProperty('bintrayKey') ? bintrayKey : ''
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = 'me.littlecheesecake:slidingtablayout-library'
+        desc = 'tab ui layout'
+        websiteUrl = 'https://github.com/yulu/slidingtablayout'
+        vcsUrl = 'https://github.com/yulu/slidingtablayout'
+        licenses = ['The MIT License']
+        labels = ['ui', 'android']
+        version {
+            name = "${versionMajor}.${versionMinor}.${versionPatch}"
+            description = 'sliding tab layout ui library'
+            vcsTag = "${versionMajor}.${versionMinor}.${versionPatch}"
+        }
+    }
+}
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'slidingtablayout-library'
+                description 'SlidingTabLayout UI'
+                url 'https://github.com/yulu/slidingtablayout'
+
+                scm {
+                    url 'http://littlecheesecake.me'
+                    connection 'scm:git@github.com/yulu/slidingtablayout'
+                    developerConnection 'scm:git@github.com/yulu/slidingtablayout.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'yulu'
+                        name 'Yu Lu'
+                        email 'yulu8798@gmail.com'
+                    }
+                }
+            }
+        }.writeTo("$buildDir/pom.xml")
+    }
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.source
+}
+
+task androidJavadocs(type: Javadoc) {
+    failOnError = false
+    source = android.sourceSets.main.java.source
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    exclude '**/internal/**'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+artifacts {
+    archives androidSourcesJar, androidJavadocsJar
+}
